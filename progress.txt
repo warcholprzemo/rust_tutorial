@@ -208,4 +208,50 @@ Ograniczenia
 
 
 ### THE SLICE TYPE
-TODO: przeczytać to jeszcze raz na spokojnie
+
+Ponieważ konstrukcja typu
+
+fn first_word(s: &String) -> usize {
+    let bytes = s.as_bytes();
+
+    for (i, &item) in bytes.iter().enumerate() {
+        if item == b' ' {
+            return i;
+        }
+    }
+
+    s.len()
+}
+....
+let mut s = String::from("hello world");
+let word = first_word(&s); // word will get the value 5
+s.clear(); // this empties the String, making it equal to ""
+
+może prowadzić do poważnych turbulencji, ponieważ po wyczyszczeniu `s` index
+do pierwszego słowa wciąż istnieje, ale jest nieaktualny.
+Aby temu zapobiec możemy korzystać ze slice'ów
+
+let hello = &s[0..5]; // działa analogicznie jak w pythonie.
+
+Dzięki temu nasz program będzie wiedział kiedy operujemy na slice'ie i nie dopuści
+do nieoczekiwanych błędów.
+
+Przykładowa końcowa funkcja zwracająca pierwsze słowo z danego tekstu
+(jeśli słowa nie da się wydzielić zwraca cały tekst)
+
+fn first_word(s: &str) -> &str {
+    let bytes = s.as_bytes();
+
+    for (i, &item) in bytes.iter().enumerate() {
+        if item == b' ' {
+            return &s[0..i];
+        }
+    }
+
+    &s[..]
+}
+
+Dodatkowa uwaga. &String, zwraca referencję do slice'a co możemy krócej zapisac jako &str
+--- SKOŃCZONY ROZDZIAŁ 4
+
+RODZIAŁ 5 - Using Structs to Structure Related Data

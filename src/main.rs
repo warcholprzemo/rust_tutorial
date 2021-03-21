@@ -18,6 +18,29 @@ fn hint(value: u32) -> u32 {
     computed
 }
 
+/* SLICE TYPES */
+fn first_word(s: &String) -> &str {
+    let bytes = s.as_bytes();
+    for (i, &item) in bytes.iter().enumerate() {
+        if item == b' ' {
+            return &s[0..i];
+        }
+    }
+    &s[..]
+}
+
+fn first_word_on_slices(s: &str) -> &str {
+    let bytes = s.as_bytes();
+    for (i, &item) in bytes.iter().enumerate() {
+        if item == b' ' {
+            return &s[0..i];
+        }
+    }
+    &s[..]
+}
+
+/* LOOPS */
+
 fn try_some_loops() {
     println!("");
 
@@ -82,6 +105,20 @@ fn amend_string(my_string: &mut String) {
 }
 
 fn main(){
+    let s1 = String::from("Test slicing");
+    let s1_first_word = first_word(&s1);
+    println!("First word: {}", s1_first_word);
+    // now we cannot borrow, event if we use `let mut s1`
+    // s.clear();
+    let s2 = String::from("OnlyOneWord");
+    //let s2_first_word = first_word_on_slices(&s2);
+    // we can of course push &str (input) directly
+    let s2_first_word = first_word_on_slices(&s2[..]);
+    println!("Second word: {}", s2_first_word);
+
+
+    println!("\n\n");
+
     let test_string = String::from("abc");
     let test_string_2 = String::from("def");
     let test_int :i32 = 22;
