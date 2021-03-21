@@ -104,7 +104,75 @@ fn amend_string(my_string: &mut String) {
     my_string.push_str(" -amended");
 }
 
+/* ----- STRUCTS ----- */
+struct Person {
+    username: String,
+    email: String,
+    sign_in_count: u64,
+    active: bool
+}
+
+/* Tuple struct */
+struct Color(u32, u32, u32);
+
+fn build_person(username: String, email: String) -> Person {
+    Person {
+        username,
+        email,
+        sign_in_count: 2,
+        active: false,
+    }
+}
+
+/* area function that uses another struct. Add #[derive(Debug)]  for debuf purpose */
+#[derive(Debug)]
+struct Rectangle {
+    width: u32,
+    height: u32,
+}
+
+fn area(rectangle: &Rectangle) -> u32 {
+    rectangle.width * rectangle.height
+}
+
 fn main(){
+    println!("\n-----------------------------------------------------------------");
+    println!("-----------------------------------------------------------------");
+    println!("-----------------------------------------------------------------\n");
+    let przemek = Person {
+        username: String::from("Przemek"),
+        email: String::from("p@w.com"),
+        active: true,
+        sign_in_count: 1,
+    };
+    println!("Przemek data: {}|{}|{}|{}", przemek.username, przemek.email, przemek.sign_in_count, przemek.active);
+    let marek = Person {
+        username: String::from("Marek"),
+        email: String::from("m@m.com"),
+        ..przemek // copy other values from przemek instance
+    };
+    println!("Marek data: {}|{}|{}|{}", marek.username, marek.email, marek.sign_in_count, marek.active);
+    let mut zbyszek = build_person(String::from("Zbyszek"), String::from("z@z.com"));
+    println!("Zbyszek data: {}|{}|{}|{}", zbyszek.username, zbyszek.email, zbyszek.sign_in_count, zbyszek.active);
+    /* we can overrite data in struct if we use `mut` */
+    zbyszek.active = true;
+    println!("Zbyszek data (changed): {}|{}|{}|{}", zbyszek.username, zbyszek.email, zbyszek.sign_in_count, zbyszek.active);
+    
+    let color_green = Color(0, 255, 0);
+    let red_saturation = color_green.0;
+    let green_saturation = color_green.1;
+    println!("red_saturation: {}, green_saturation: {}", red_saturation, green_saturation);
+    let rectangle = Rectangle {
+        width: 30,
+        height: 15,
+    };
+    let rectangle_area = area(&rectangle);
+    println!("Rectangle: {:#?}", rectangle); // or {:?} - simple formatting
+    println!("Area of Rectangle: {}", rectangle_area);
+
+
+    println!("\n\n");
+
     let s1 = String::from("Test slicing");
     let s1_first_word = first_word(&s1);
     println!("First word: {}", s1_first_word);

@@ -252,6 +252,61 @@ fn first_word(s: &str) -> &str {
 }
 
 Dodatkowa uwaga. &String, zwraca referencję do slice'a co możemy krócej zapisac jako &str
---- SKOŃCZONY ROZDZIAŁ 4
 
-RODZIAŁ 5 - Using Structs to Structure Related Data
+--- SKOŃCZONY ROZDZIAŁ 4 ---
+--- RODZIAŁ 5 - Using Structs to Structure Related Data ---
+
+/* struktura prosta */
+struct Person {
+    username: String,
+    email: String,
+    sign_in_count: u64,
+    active: bool
+}
+
+/* Tuple struct */
+struct Color(u32, u32, u32);
+
+/* budowanie struktury - funkcja - "kopiowanie" parametrów do struktury
+fn build_person(username: String, email: String) -> Person {
+    Person {
+        username,
+        email,
+        sign_in_count: 2,
+        active: false,
+    }
+}
+
+/* inicjalizacja struktury */
+let przemek = Person {
+    username: String::from("Przemek"),
+    email: String::from("p@w.com"),
+    active: true,
+    sign_in_count: 1,
+}
+
+/* inicjalizacja struktury z innej struktury */
+let marek = Person {
+    username: String::from("Marek"),
+    email: String::from("m@m.com"),
+    ..przemek // copy other values from przemek instance
+};
+
+/* inicjalizacja Tuple Struktury */
+let color_green = Color(0, 255, 0);
+
+/* Dostęp do struktury */
+let m_username = marek.username;       // zwykła
+let green_saturation = color_green.1;  // tuplowa
+
+/* mut pozwala zmieniać dane w dowolnym polu struktury */
+let mut zbyszek = build_person(String::from("Zbyszek"), String::from("z@z.com"));
+zbyszek.active = true;
+
+/* formatowanie dla println! (debug) */
+Dodaj przed definicją struktury
+#[derive(Debug)]
+
+i w println!
+println!("Rectangle: {:#?}", rectangle); // or {:?} - simple formatting
+
