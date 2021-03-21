@@ -1,0 +1,211 @@
+### 1. można samodzielnie utworzyć plik z rozszerzeniem *.rs i kompilować go
+$ rustc main.rs
+
+### 2. sprawdzanie jakości
+$ rustfmt --check main.rs  <- wyrzuca diff z błędami
+$ rustfmt main.rs <- formatuje automatycznie
+
+### 3. polecenie `cargo` służy do tworzenia całego projektu
+tworzy też w rodku repozytorium gitowe
+$ cargo new hello_cargo  <- tworzy projektu
+
+$ cargo build <- kompiluje projekt do celów devel
+$ ./target/debug/hello_cargo  <- uruchomienie
+
+$ cargo run <- 2 powyższe jednocześnie
+$ cargo check <- do sprawdzenia czy jest kompilowalny
+
+$ cargo build --release <- dłuższa kompilacja do szybszego kodu
+
+### 4. TYPY DANYCH
+
+let x = 5; <- tworzy immutable
+let mut x = 5; <- tworzy mutable
+const MAX_POINTS: u32 = 100_000;
+
+można shadow-ować zmienne immutable powtarzając let
+let x = 5;
+let x = x + 1;
+let x = x * 2;
+
+let x: u32 = 5 <- unsigned int
+let x: u32 = 5 <- signed int
+let y: f32 = 2.0; <- float 32 / f32
+let y = 3.0; <- float 64 (default) / f64
+
+usize / isize - przydatne jako domyślny intowy typ, przydatny do rozpakowywania kolekcji
+
+Typ bool
+let flag = true;
+let flag: bool = false;
+
+Typ character
+let c = 'x'; // only 1 char
+let c2: char = 'y';
+
+
+
+### KROTKI, mogą mieć elementy różnych typów, mają ustaloną długość
+let k: (i32, f64, char) = (500, 66.5, 'c');
+
+można indeksowac je korzystając z kropek (od 0)
+let f = k.1;
+
+można je rozpakowywać
+let (x, y, z) = k;
+
+### TABLICE, tylko ten sam typ, ustalona długość
+let months = ["January", "February", "March"];
+let a: [i32; 5] = [1, 2, 3, 4, 5]; // 5 elementów i32
+let l: [i32; 5] = [3; 5];; // 5 elementów, każdy == 3
+
+dostęp poprzez indexy
+l[0] -> 1. element
+l[4] -> ostatni element dla 5-elementowej listy
+
+
+### 5.
+zależności nazywamy skrzyniami "crate"
+
+### FUNCTION
+
+składnia
+fn another_function(x: u32, y: f64) -> u32 {
+    // code here
+    5     // no semicolon, return 5
+    value // return the value of 5 
+}
+STATEMENT - wyrażenie, które nie zwraca wartości, zakończone średnikiem
+EXPRESSION - wyrażenie, które zwraca wartość, NIE zakończone średnikiem
+
+### 6. dokumentacja developerska
+$ cargo doc --open <- buduje i otwiera w przeglądarce dokumentację
+
+### IF-ELSE
+
+condition musi być boolowski, nie możemy porównywać intów/krotek itd.
+
+if x == 5 {
+    //code
+} else if x == 6 {
+    //code
+} else {
+    // code
+}
+
+można łączyć if-a z let-em
+
+let condition = true;
+let x = if condition { 5 } else { 6 }; //obydwie wartości muszą być tego samego typu
+
+### OPERATORY LOGICZNE
+if a==3 || a==5 - OR
+if a==3 && b==4 - AND
+
+### PĘTLE
+
+1. nieskończona pętla LOOP z przypisaniem po break
+
+let mut counter = 0;
+let result = loop {
+    counter += 1;
+    if counter == 10 {
+        break counter * 2;
+    }
+}
+
+2. pętla WHILE
+let i = 0;
+while i < 3 {
+    i+=1;
+}
+
+3. petla FOR
+let mylist = [5,6,7,8];
+for element in mylist.iter() {
+    println!("{}", element);
+}
+
+--- SKOŃCZONY ROZDZIAŁ 3
+--- RODZIAŁ 4
+stack - tu trzymamy wartości danych które są znane z gory, oraz wskaźniki do heap
+heap - tu trzymamy wartości danych które nie są znanze z góry. Jest to wolniejsze
+
+{
+  let x=5; // `x` jest znane tak długo jak pozostaje w scope
+}
+
+let x=5; // inicjalizujemy 5
+let y=x; // kopiujemy wartość (operacje na stacku)
+
+let s1 = String::from("hello"); // inicjalizujemy wartość na heap
+let s2 = s1; // kopiujemy wskażnik! Nie kopiujejemy wartości, z powodu kosztownych operacjach na pamięci
+Aby nie zwalniać dwukrotnie tego samego zasobu s1 "za wczasu" usuwane z dostępnych zmiennych!
+s1 _was moved_ into s2
+
+jeśli chcemy skopiować wartości na heap musimy użyć s1.clone()
+let s1 = String::from("hello");
+let s2 = s1.clone();
+println!("{} {}", s1, s2);
+
+Ta uwaga nie dotyczy kopii dokonywanych na stacku (jak powyżej w intami)
+Typy kopiowane na Stacku (implemenetują Copy annotation)
+- int
+- bool
+- float
+- char
+- tuple, ale tylko gdy wszystkie elementy zbioru implementują Copy np. (i32, i32)
+
+Te same zasady dotyczą przekazywania ownership do-i-z funkcji (parametry fkcji, return)
+fn takes_ownership(some_string: String) { // some_string comes into scope
+    println!("{}", some_string);
+}
+let s = String::from("fufa");
+takes_ownership(s);
+// s is not longer available
+
+
+aby uchronic się przed sztuckami typu ("przywracanie" wartości tuplami)
+fn main() {
+    let s1 = String::from("hello");
+    let (s2, len) = calculate_length(s1);
+    println!("The length of '{}' is {}.", s2, len);
+}
+można użyć Referencji
+
+### REFERENCJE
+Referencje powstrzymują przed przekazywaniem (traceniem) ownership na zmiennej
+
+Referencja zwykła
+
+fn main() {
+    let s = String::from("hello");
+    change(&s);
+    // still we can use s
+}
+
+fn change(some_string: &String) {
+    some_string.push_str(", world");
+}
+
+Referencja mutowalna
+
+fn main() {
+    let mut s = String::from("hello");
+    change(&mut s);
+    // s == "hello, world"
+}
+
+fn change(some_string: &mut String) {
+    some_string.push_str(", world");
+}
+
+Ograniczenia
+1. Można mieć wiele immutable rereferncji
+2. Ale Może istnieć tylko 1 ref mut w scopie
+3. nie można mieszać zwykłych i mut referencji
+4. Trzeba uważać z dangling reference (próba zwrócenia &s z funkcji)
+
+
+### THE SLICE TYPE
+TODO: przeczytać to jeszcze raz na spokojnie
