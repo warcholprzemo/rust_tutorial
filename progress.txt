@@ -29,7 +29,7 @@ let x = x + 1;
 let x = x * 2;
 
 let x: u32 = 5 <- unsigned int
-let x: u32 = 5 <- signed int
+let x: i32 = 5 <- signed int
 let y: f32 = 2.0; <- float 32 / f32
 let y = 3.0; <- float 64 (default) / f64
 
@@ -129,7 +129,7 @@ for element in mylist.iter() {
 --- SKOŃCZONY ROZDZIAŁ 3
 --- RODZIAŁ 4
 stack - tu trzymamy wartości danych które są znane z gory, oraz wskaźniki do heap
-heap - tu trzymamy wartości danych które nie są znanze z góry. Jest to wolniejsze
+heap - tu trzymamy wartości danych które nie są znane z góry. Jest to wolniejsze
 
 {
   let x=5; // `x` jest znane tak długo jak pozostaje w scope
@@ -203,7 +203,7 @@ fn change(some_string: &mut String) {
 Ograniczenia
 1. Można mieć wiele immutable rereferncji
 2. Ale Może istnieć tylko 1 ref mut w scopie
-3. nie można mieszać zwykłych i mut referencji
+3. Nie można mieszać zwykłych i mut referencji
 4. Trzeba uważać z dangling reference (próba zwrócenia &s z funkcji)
 
 
@@ -255,7 +255,7 @@ Dodatkowa uwaga. &String, zwraca referencję do slice'a co możemy krócej zapis
 
 --- SKOŃCZONY ROZDZIAŁ 4 ---
 --- RODZIAŁ 5 - Using Structs to Structure Related Data ---
-
+--- ROZDZIAŁ 5.1 - Defining and Instantiating Structs ---
 /* struktura prosta */
 struct Person {
     username: String,
@@ -310,3 +310,52 @@ Dodaj przed definicją struktury
 i w println!
 println!("Rectangle: {:#?}", rectangle); // or {:?} - simple formatting
 
+--- ROZDZIAŁ 5.2 - An example Program using structs ---
+Aby dodać kontekstu dla danych i ich funkcji można zapakowac dane do struct.
+Oczywiście można użyć naiwnego podejścia z int-ami, lub tuple'ami, chodzi o schludność kodu
+
+struct Rectangle {
+    width: u32,
+    height: u32,
+}
+
+fn area(rectangle: &Rectangle) -> u32 {
+    rectangle.width * rectangle.height
+}
+
+fn main() {
+    let rect1 = Rectangle { width: 30, height: 50, };
+    println("{}", area(&rect1);
+}
+
+--- ROZDZIAŁ 5.3 - Method syntax ---
+
+Metody definiujemy w scope impl MyStruc{}.
+Jedna struktura może mieć kilka implementacji
+
+Metody w rust mogą
+* przyjmować 1 argument &self. Mogą także przyjąć self, ale wtedy zabieramy ownership. Call: struct.meth()
+* przyjmować kolejne argumenty (kolejne po &self)
+* nie używać self, wtedy są "statyczne". Call: struct::meth()
+
+impl Rectangle {
+    // The simple method, with only 1 arg - self (&Self)
+    fn circumference(&self) -> u32 {
+        (self.width + self.height) * 2
+    }
+
+    // method that has more arguments
+    fn can_hold(&self, other: &Rectangle) -> bool {
+        self.width > other.width && self.height > other.height
+    }
+
+    // "static" method - assicoated function, we can use it to create 
+    // a new rectangle (square in this case)
+    // we call it using ::, Rectangle::square(70)
+    fn square(size: u32) -> Rectangle {
+        Rectangle {
+            width: size,
+            height: size
+        }
+    }
+}

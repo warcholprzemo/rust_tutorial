@@ -2,6 +2,8 @@ use std::io;
 use std::cmp::Ordering;
 use rand::Rng;
 
+mod structs;
+
 const VALUE_TO_COMPARE: u32 = 50;
 
 fn hint(value: u32) -> u32 {
@@ -213,6 +215,11 @@ fn main(){
     try_some_loops();
     learn_string_on_the_heap();
     
+    // use other structs
+    println!("\n\n");
+    println!("--functions from other module");
+    structs::main_structs();
+
 
     println!("\n\n");
     println!("Guess the number");
