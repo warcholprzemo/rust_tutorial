@@ -3,6 +3,7 @@ use std::cmp::Ordering;
 use rand::Rng;
 
 mod structs;
+mod enums;
 
 const VALUE_TO_COMPARE: u32 = 50;
 
@@ -217,8 +218,14 @@ fn main(){
     
     // use other structs
     println!("\n\n");
-    println!("--functions from other module");
+    println!("--struct functions from other module");
     structs::main_structs();
+    
+    // use enums
+    println!("\n\n");
+    println!("--enums from other module");
+    enums::main_enums();
+    
 
 
     println!("\n\n");

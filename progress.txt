@@ -359,3 +359,90 @@ impl Rectangle {
         }
     }
 }
+
+
+--- ROZDZIAŁ 6.1 ENUM ---
+
+Enumy można definiować jak w każdym innym języku programowania.
+Mogą przyjmować argumenty różnych typów (nawet struct) i mogą
+definiować swoje funkcje
+
+enum Message {
+    Quit,
+    Move { x: i32, y: i32 },
+    Write(String),
+    ChangeColor(i32, i32, i32)
+}
+impl Message {
+    fn call(&self) {
+        // some stuff here
+    }
+}
+
+Specjalnym enum-em wbudowanym w język jest Option, który pozwala
+zadeklarować Some lub None. Jest to jedyny sposób by utworzyć null-a w Rust
+enum Option<T> {   // T <- dowolny typ
+    None,
+    Some(T)
+}
+
+let some_string = Some("a string");
+let some_number = Some(5);
+let absent_number: Option<i32> = None;
+
+i w tej sytuacji nieżna dodawać zwykłego int-a do Some. Trzeba najpierw wykonać procedurę sprawdzania typów i null-i.
+
+--- ROZDZIAŁ 6.2 MATCH ---
+
+match pozwala przejść przez enuma i dla zadanego enuma zwracać wartość (dowolną), np
+
+match coin {
+    Coin::Penny => {
+        println!("Lucky penny!");  // można wykonywać customowy kod przed returnem
+        1
+    }
+    Coin::Nickel => 5,
+    Coin::Dime => 10,
+    Coin::Quarter => 25,
+}
+
+możemy używać 
+_ => () -> jako "dopasuj pozostałe / nic nie rób jako sugar syntax
+np.
+
+match dice_roll {
+    3 => add_fancy_hat(),
+    7 => remove_fancy_hat(),
+    _ => (),
+}
+
+Match używamy także do rozpakowywania Option, np.
+
+fn plus_one(x: Option<i32>) -> Option<i32> {
+    match x {
+        None => None,
+        Some(i) => Some(i + 1),
+    }
+}
+
+--- ROZDZIAŁ 6.3 IF-LET ---
+
+konstrukcja if let pozwala na pominięcie matcha, wtedy gdy chcemy sprawdzić
+jakąś jedną wartość z enum-a. Można dodawać także else
+np. 
+
+let mut count = 0;
+if let Coin::Quarter(state) = coin {
+    println!("State quarter from {:?}!", state);
+} else {
+    count += 1;
+}
+
+co jest analogiczne do
+
+
+let mut count = 0;
+match coin {
+    Coin::Quarter(state) => println!("State quarter from {:?}!", state),
+    _ => count += 1,
+}
