@@ -126,6 +126,15 @@ for element in mylist.iter() {
     println!("{}", element);
 }
 
+pętla "range"
+for n in 1..101 {
+}
+
+pętla "range", inclusywna z obydwu stron
+for n in 1..=100 {
+}
+
+
 --- SKOŃCZONY ROZDZIAŁ 3
 --- RODZIAŁ 4
 stack - tu trzymamy wartości danych które są znane z gory, oraz wskaźniki do heap
@@ -446,3 +455,44 @@ match coin {
     Coin::Quarter(state) => println!("State quarter from {:?}!", state),
     _ => count += 1,
 }
+
+--- RODZIAŁ 7 - PACKAGES, CRATES, MODULES ---
+moduły ze ścieżką absolutną zaczynają się od crate::foo::bar
+moduły ze ścieżką relatywną zaczynają się od foo::bar
+słówko `pub` udostępnia moduł / funkcję / struct. Nie trzeba pisać pub dla enumów
+importowanie odbywa się za pomocą `use`. Można importować na kilka sposobów
+
+use std::cmp::Ordering;
+use std::io;
+// lub
+use std::{cmp::Ordering, io};
+
+use std::io;
+use std::io::Write;
+// lub
+use std::io::{self, Write};
+
+Można importować wszystko za pomocą *
+use std::collections::*;
+
+
+Przykład - chcemy utworzyć funkcję istniejącą w innym module, a następnie wywołać ją w libs.rs (cargo project)
+
+# src/lib.rs
+mod front_of_house;
+
+pub use crate::front_of_house::hosting;
+
+pub fn eat_at_restaurant() {
+    hosting::add_to_waitlist();
+    hosting::add_to_waitlist();
+    hosting::add_to_waitlist();
+}
+
+
+# src/front_of_house.rs
+pub mod hosting;  // lub definiowanie tu wszystkiego jeśli nie chcemy katalogu
+
+
+# src/front_of_house/hosting.rs
+pub fn add_to_waitlist() {}
