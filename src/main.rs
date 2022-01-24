@@ -4,6 +4,7 @@ use rand::Rng;
 
 mod structs;
 mod enums;
+mod recoverable_errors;
 
 const VALUE_TO_COMPARE: u32 = 50;
 
@@ -225,8 +226,11 @@ fn main(){
     println!("\n\n");
     println!("--enums from other module");
     enums::main_enums();
-    
 
+    // use recoverable_errors
+    println!("\n\n");
+    println!("--recoverable_errors from other module");
+    recoverable_errors::main_recoverable_errors();
 
     println!("\n\n");
     println!("Guess the number");

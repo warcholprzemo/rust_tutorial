@@ -528,6 +528,8 @@ for i in &mut v {
 let s = String::from("abc");
 jest tym samym co
 let s = "abc".to_string();
+pusty String można utworzyć za pomocą
+let s = String::new();
 
 Operacje na String
 s.push_str("bar"); // dodaje string ze slice'a
