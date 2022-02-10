@@ -5,6 +5,7 @@ use rand::Rng;
 mod structs;
 mod enums;
 mod recoverable_errors;
+mod generics;
 
 const VALUE_TO_COMPARE: u32 = 50;
 
@@ -231,6 +232,17 @@ fn main(){
     println!("\n\n");
     println!("--recoverable_errors from other module");
     recoverable_errors::main_recoverable_errors();
+
+    // use generics
+    println!("\n\n");
+    println!("--generics from other module");
+    let number_list = vec![34, 50, 72, 23];
+    let char_list = vec!['a', 'M', 'd', 'x', 'b'];
+    let the_largest_i32 = generics::largest_i32(&number_list);
+    println!("the largest i32 is: {}", the_largest_i32);
+    let the_largest_char = generics::largest_char(&char_list);
+    println!("the largest char is: {}", the_largest_char);
+
 
     println!("\n\n");
     println!("Guess the number");

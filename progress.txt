@@ -547,7 +547,7 @@ Nie można indeksować po stringu, ponieważ ten przechowuje unicody w postaci b
 Więc przy unicode 1 znak może zajmować 1 lub więcej bajtów
 Więc nawet jak robimy slice, trzeba uważać, bo konstrukcja jak &hello[0..1] może doprowadzić do panic!
 
----------- RODZIAŁ 8.2 - HASH MAP
+---------- RODZIAŁ 8.3 - HASH MAP
 
 Tworzenie hashmapy
 
@@ -574,3 +574,70 @@ get-or-insert
 scores.insert(String::from("Blue"), 10);
 scores.entry(String::from("Yellow")).or_insert(50); // doda "Yellow": 50
 scores.entry(String::from("Blue")).or_insert(50);  // nic nie zrobi, bo Blue już istnieje
+
+---------- ROZDZIAŁ 10.1 - GENERIC DATA TYPES
+
+Aby zapobiegać duplikacji kodu (różne funkcje dla różnych typów)
+można sprowadzać te funkcje do typów generycznych.
+
+Przykład deklaracji takiej funkcji. Zwróć uwagę na
+<T> pomiędzy nazwą funkcji a parametrami oraz typ argumentu i typ zwracany
+
+fn largest<T>(list: &[T]) -> T {
+    // do some stuff
+}
+
+Wtedy gdy potrzebujemy więcej niż 1 typ, można użyć kolejnych Wielkich liter (CamelCase)
+Ale może to prowadzić do zwiększonego zamieszania
+
+Typów można użyć także dla struktur (i jej metod)...
+
+struct Point<T> {
+    x: T,
+    y: T.
+}
+
+impl<T> Point<T> {
+    fn x(&self) -> &T {
+        &self.x
+    }
+}
+
+let p = Point { x: 5, y: 7 };
+p.x();
+
+Można implementować metodę na strukturze generycznej.
+Wystarczy wtedy podać typ wprost
+
+impl Point<f32> {
+    fn distance(&self) -> f32 {
+        (self.x.powi(2) + self.y.powi(2)).sqrt()
+    }
+}
+
+...oraz enumów
+
+enum Result<T, E> {
+    Ok(T),
+    Err(E),
+}
+
+---
+
+Można nawet utworzyć sytuację kiedy implementowana metoda
+będzie przyjmować inne typy, niz te zadeklarowane już wcześniej
+Prowadzi to do kodu jak
+
+struct Point<X1, X2> {
+    x: X1,
+    y: Y1,
+}
+
+impl<X1, Y1> Point<X1, Y1> {
+    fn mixup<X2, Y2>(self, other: Point<X2, Y2>) -> Point<X1, Y2> {
+        Point {
+            x: self.x,
+            y: other.y,
+        }
+    }
+}
