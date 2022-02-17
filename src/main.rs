@@ -1,6 +1,7 @@
 use std::io;
 use std::cmp::Ordering;
 use rand::Rng;
+use generics::{Summary};  /* this is mandatory if we want to use Summary trait */
 
 mod structs;
 mod enums;
@@ -238,10 +239,31 @@ fn main(){
     println!("--generics from other module");
     let number_list = vec![34, 50, 72, 23];
     let char_list = vec!['a', 'M', 'd', 'x', 'b'];
-    let the_largest_i32 = generics::largest_i32(&number_list);
+    // let the_largest_i32 = generics::largest_i32(&number_list);
+    let the_largest_i32 = generics::largest(&number_list);
     println!("the largest i32 is: {}", the_largest_i32);
-    let the_largest_char = generics::largest_char(&char_list);
+
+    // let the_largest_char = generics::largest_char(&char_list);
+    let the_largest_char = generics::largest(&char_list);
     println!("the largest char is: {}", the_largest_char);
+
+    let tweet = generics::Tweet {
+        username: String::from("ziutek"),
+        tweet: String::from("I like rust!"),
+        likes: 20
+    };
+    println!("{}", tweet.summarize());
+    println!("Tweet: {}", tweet.rating());
+    println!("Tweet.help: {}", tweet.help());
+
+    let article = generics::NewsArticle {
+        headline: String::from("New casio watch!"),
+        author: String::from("Gunther"),
+        occ: 3000
+    };
+    println!("{}", article.summarize());
+    println!("NewsArticle: {}", article.rating());
+    println!("NewsArticle.help: {}", article.help());
 
 
     println!("\n\n");
